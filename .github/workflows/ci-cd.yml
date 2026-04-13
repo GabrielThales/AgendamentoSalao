@@ -105,7 +105,7 @@ jobs:
         working-directory: ./infra
         run: |
           terraform init
-          terraform apply -auto-approve
+          terraform apply -var="ssh_ip=${{ env.RUNNER_IP }}" -auto-approve
 
       - name: Obter IP da Instancia
         id: get_ip
