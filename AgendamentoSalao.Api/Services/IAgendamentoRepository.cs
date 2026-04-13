@@ -6,5 +6,6 @@ namespace AgendamentoSalao.Api.Services
     {
         bool ExisteAgendamento(int profissionalId, DateTime dataHora);
         void Salvar(Agendamento agendamento);
+        IEnumerable<Agendamento> ObterTodos();
     }
 }

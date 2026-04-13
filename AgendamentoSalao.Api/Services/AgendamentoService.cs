@@ -24,7 +24,7 @@ namespace AgendamentoSalao.Api.Services
             }
 
             var novoAgendamento = new Agendamento(request.ClienteId, request.ProfissionalId, request.DataHora);
-            _repository.Salvar(novoAgendamento);
+            _repository.Salvar(novoAgendamento); 
         }
     }
 }
