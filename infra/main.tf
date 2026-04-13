@@ -50,3 +50,7 @@ resource "aws_instance" "api_server" {
     Name = "Servidor-Salao-Beleza"
   }
 }
+
+output "ip_publico" {
+  value = aws_instance.api_server.public_ip
+}
