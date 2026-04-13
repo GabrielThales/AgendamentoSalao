@@ -1,8 +1,9 @@
-﻿using System;
+﻿using AgendamentoSalao.Api.Models;
+using AgendamentoSalao.Api.Services;
 using Moq;
 using NUnit.Framework;
-using AgendamentoSalao.Api.Services;
-using AgendamentoSalao.Api.Models; 
+using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace AgendamentoSalao.Tests
 {

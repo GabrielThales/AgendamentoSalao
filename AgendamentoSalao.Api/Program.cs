@@ -1,6 +1,8 @@
 using AgendamentoSalao.Api.Models;
 using AgendamentoSalao.Api.Services;
-using System.Runtime.CompilerServices;
+using System.Diagnostics.CodeAnalysis;
+
+[assembly: ExcludeFromCodeCoverage]
 
 var builder = WebApplication.CreateBuilder(args);
 
