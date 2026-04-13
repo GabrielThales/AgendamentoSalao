@@ -1,0 +1,54 @@
+name: CI/CD Salão de Beleza
+
+# 1. Gatilho: A esteira roda toda vez que houver um push na branch main
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  # ==========================================
+  # JOB 1: VALIDAÇÃO (Testes e Compilação)
+  # ==========================================
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout do código
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '10.0.x'
+
+    - name: Restaurar dependências
+      run: dotnet restore AgendamentoSalao.sln
+
+    - name: Compilar a aplicação (Build)
+      run: dotnet build AgendamentoSalao.sln --no-restore --configuration Release
+
+    - name: Executar Testes Unitários (NUnit)
+      run: dotnet test AgendamentoSalao.sln --no-build --configuration Release --verbosity normal
+
+  # ==========================================
+  # JOB 2: EMPACOTAMENTO (Docker)
+  # ==========================================
+  docker-build-push:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout do código
+      uses: actions/checkout@v4
+
+    - name: Login no Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Construir e Enviar Imagem Docker (Build & Push)
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        file: ./Dockerfile
+        push: true
+        tags: ${{ secrets.DOCKER_USERNAME }}/api-salao-beleza:latest
