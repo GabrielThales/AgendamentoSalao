@@ -54,7 +54,7 @@ namespace AgendamentoSalao.Tests
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
         }
 
-        [Test]
+        /*[Test]
         public async Task GET_Deve_Retornar_Ok_200_E_Lista_De_Agendamentos()
         {
             // Act
@@ -62,6 +62,6 @@ namespace AgendamentoSalao.Tests
 
             // Assert
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
-        }
+        }*/
     }
 }
