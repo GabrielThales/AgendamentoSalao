@@ -17,6 +17,11 @@ namespace AgendamentoSalao.Api.Services
             {
                 throw new ArgumentException("Não é possível agendar um horário no passado.");
             }
+
+            if (_repository.ExisteAgendamento(request.ProfissionalId, request.DataHora))
+            {
+                throw new InvalidOperationException("Profissional já possui um agendamento neste horário.");
+            }
         }
     }
 }
