@@ -76,3 +76,45 @@ jobs:
         file: ./Dockerfile
         push: true
         tags: ${{ secrets.DOCKER_USERNAME }}/api-salao-beleza:latest
+
+  # ==========================================
+  # JOB 3: Terraform -> Ansible -> DEPLOY (Docker) -> AWS
+  # ==========================================      
+  deploy:
+      needs: docker-build-push # So roda se a imagem for enviada com sucesso
+      runs-on: ubuntu-latest
+      steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar Credenciais AWS
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Terraform Apply
+        working-directory: ./infra
+        run: |
+          terraform init
+          terraform apply -auto-approve
+
+      - name: Obter IP da Instancia
+        id: get_ip
+        working-directory: ./infra
+        run: echo "EC2_IP=$(terraform output -raw ip_publico)" >> $GITHUB_ENV
+
+      - name: Preparar Chave SSH e Rodar Ansible
+        env:
+          SSH_KEY: ${{ secrets.AWS_SSH_KEY }}
+        run: |
+          echo "$SSH_KEY" > key.pem
+          chmod 400 key.pem
+          # Espera a maquina ligar completamente
+          sleep 30 
+          ansible-playbook -i "$EC2_IP," ./infra/playbook.yml \
+            --private-key key.pem \
+            -u ubuntu \
+            --extra-vars "docker_user=${{ secrets.DOCKER_USERNAME }}" \
+            --ssh-common-args='-o StrictHostKeyChecking=no'

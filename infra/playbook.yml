@@ -1,0 +1,54 @@
+---
+- name: Configurar Servidor EC2 e Subir a API
+  hosts: all
+  become: yes # Executa tudo como administrador (sudo)
+
+  tasks:
+    # 1. Preparação da Máquina
+    - name: Atualizar o cache do Ubuntu (apt-get update)
+      apt:
+        update_cache: yes
+
+    - name: Instalar pacotes base para o Docker
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - software-properties-common
+        state: present
+
+    # 2. Instalação do Docker
+    - name: Adicionar chave GPG oficial do Docker
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Adicionar repositorio oficial do Docker
+      apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu jammy stable
+        state: present
+
+    - name: Instalar o Docker Engine
+      apt:
+        name: docker-ce
+        state: present
+        update_cache: yes
+
+    - name: Garantir que o Docker esta rodando e inicia com o sistema
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    # 3. Implantação (Deploy) da nossa API
+    - name: Parar e remover container antigo (se existir)
+      command: docker rm -f api-salao
+      ignore_errors: yes # Ignora erro se for a primeira vez rodando e nao existir container
+
+    - name: Baixar a imagem mais recente do Docker Hub
+      # A variavel {{ docker_user }} sera injetada pela nossa esteira
+      command: docker pull {{ docker_user }}/api-salao-beleza:latest
+
+    - name: Iniciar o novo container da API
+      command: docker run -d -p 8080:8080 --name api-salao {{ docker_user }}/api-salao-beleza:latest

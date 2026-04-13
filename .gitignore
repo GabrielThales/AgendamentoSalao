@@ -480,3 +480,20 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+# =========================
+# Terraform
+# =========================
+# Ignora a pasta oculta onde o Terraform baixa os plugins (pesada)
+**/.terraform/*
+
+# Ignora os arquivos de estado (Risco de Segurança ALTO!)
+*.tfstate
+*.tfstate.*
+
+# Ignora arquivos de variáveis locais (onde você pode colocar senhas para testar na sua máquina)
+*.tfvars
+*.tfvars.json
+
+# Ignora o arquivo de log de crash do Terraform
+crash.log
