@@ -1,8 +1,4 @@
 <Solution>
-  <Folder Name="/.github/">
-    <File Path="ci-cd.yml" />
-  </Folder>
-  <Folder Name="/.github/workflows/" />
   <Folder Name="/Itens de Solução/">
     <File Path="Dockerfile" />
   </Folder>
