@@ -1,4 +1,4 @@
-name: CI/CD Sal�o de Beleza
+name: CI/CD Salao de Beleza
 
 # 1. Gatilho: A esteira roda toda vez que houver um push na branch main
 on:
@@ -7,27 +7,51 @@ on:
 
 jobs:
   # ==========================================
-  # JOB 1: VALIDA��O (Testes e Compila��o)
+  # JOB 1: VALIDAÇÃO (Testes, Build e Sonar)
   # ==========================================
   build-and-test:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout do c�digo
+    - name: Checkout do codigo
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Obrigatório para o Sonar analisar o histórico do Git
+
+    - name: Setup Java JDK 17 (Requisito do Sonar)
+      uses: actions/setup-java@v3
+      with:
+        java-version: 17
+        distribution: 'zulu'
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '10.0.x'
+        dotnet-version: '8.0.x'
 
-    - name: Restaurar depend�ncias
+    - name: Instalar SonarScanner
+      run: dotnet tool install --global dotnet-sonarscanner
+
+    - name: Iniciar Analise do SonarCloud
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      run: dotnet sonarscanner begin /k:"GabrielThales_AgendamentoSalao" /o:"gabrielthales" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml"
+
+    - name: Restaurar dependencias
       run: dotnet restore AgendamentoSalao.slnx
 
-    - name: Compilar a aplica��o (Build)
+    - name: Compilar a aplicacao (Build)
       run: dotnet build AgendamentoSalao.slnx --no-restore --configuration Release
 
-    - name: Executar Testes Unit�rios (NUnit)
-      run: dotnet test AgendamentoSalao.slnx --no-build --configuration Release --verbosity normal
+    - name: Executar Testes Unitarios e Gerar Relatorio de Cobertura
+
+      run: dotnet test AgendamentoSalao.slnx --no-build --configuration Release --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+
+    - name: Finalizar Analise do SonarCloud e Enviar Dados
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      run: dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
   # ==========================================
   # JOB 2: EMPACOTAMENTO (Docker)
@@ -36,7 +60,7 @@ jobs:
     needs: build-and-test
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout do c�digo
+    - name: Checkout do codigo
       uses: actions/checkout@v4
 
     - name: Login no Docker Hub
