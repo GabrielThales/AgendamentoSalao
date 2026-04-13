@@ -50,3 +50,5 @@ app.MapGet("/agendamentos", (IAgendamentoRepository repo) =>
 
 
 app.Run();
+
+public partial class Program { }
