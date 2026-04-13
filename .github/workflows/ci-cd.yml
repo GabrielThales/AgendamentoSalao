@@ -1,4 +1,4 @@
-name: CI/CD Salão de Beleza
+name: CI/CD Salï¿½o de Beleza
 
 # 1. Gatilho: A esteira roda toda vez que houver um push na branch main
 on:
@@ -7,12 +7,12 @@ on:
 
 jobs:
   # ==========================================
-  # JOB 1: VALIDAÇÃO (Testes e Compilação)
+  # JOB 1: VALIDAï¿½ï¿½O (Testes e Compilaï¿½ï¿½o)
   # ==========================================
   build-and-test:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout do código
+    - name: Checkout do cï¿½digo
       uses: actions/checkout@v4
 
     - name: Setup .NET
@@ -20,14 +20,14 @@ jobs:
       with:
         dotnet-version: '10.0.x'
 
-    - name: Restaurar dependências
-      run: dotnet restore AgendamentoSalao.sln
+    - name: Restaurar dependï¿½ncias
+      run: dotnet restore AgendamentoSalao.slnx
 
-    - name: Compilar a aplicação (Build)
-      run: dotnet build AgendamentoSalao.sln --no-restore --configuration Release
+    - name: Compilar a aplicaï¿½ï¿½o (Build)
+      run: dotnet build AgendamentoSalao.slnx --no-restore --configuration Release
 
-    - name: Executar Testes Unitários (NUnit)
-      run: dotnet test AgendamentoSalao.sln --no-build --configuration Release --verbosity normal
+    - name: Executar Testes Unitï¿½rios (NUnit)
+      run: dotnet test AgendamentoSalao.slnx --no-build --configuration Release --verbosity normal
 
   # ==========================================
   # JOB 2: EMPACOTAMENTO (Docker)
@@ -36,7 +36,7 @@ jobs:
     needs: build-and-test
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout do código
+    - name: Checkout do cï¿½digo
       uses: actions/checkout@v4
 
     - name: Login no Docker Hub
