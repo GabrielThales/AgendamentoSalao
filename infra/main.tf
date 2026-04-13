@@ -1,3 +1,8 @@
+variable "ssh_ip" {
+  description = "IP com permissão para acessar o SSH"
+  type        = string
+}
+
 terraform {
   backend "s3" {
     bucket = "terraform-state-gabriel-salao-2026"
