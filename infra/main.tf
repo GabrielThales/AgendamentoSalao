@@ -1,3 +1,11 @@
+terraform {
+  backend "s3" {
+    bucket = "terraform-state-gabriel-salao-2026"
+    key    = "salao/terraform.tfstate"
+    region = "us-east-1"
+  }
+}
+
 # 1. Definir o provedor
 provider "aws" {
   region = "us-east-1"
