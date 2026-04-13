@@ -84,7 +84,7 @@ jobs:
       needs: docker-build-push # So roda se a imagem for enviada com sucesso
       runs-on: ubuntu-latest
       steps:
-      - name: Checkout do código
+      - name: Checkout do codigo
         uses: actions/checkout@v4
 
       - name: Configurar Credenciais AWS
@@ -93,6 +93,9 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
 
       - name: Terraform Apply
         working-directory: ./infra
