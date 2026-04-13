@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="AgendamentoSalao.Api/AgendamentoSalao.Api.csproj" />
+  <Project Path="AgendamentoSalao.Tests/AgendamentoSalao.Tests.csproj" />
+</Solution>
