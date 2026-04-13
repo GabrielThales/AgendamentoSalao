@@ -2,14 +2,15 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 
 namespace AgendamentoSalao.Api.Services
 {
+    [ExcludeFromCodeCoverage]
     public class AgendamentoRepositoryInMemory : IAgendamentoRepository
     {
-        [assembly: ExcludeFromCodeCoverage]
         // Uma lista estática funciona como um banco de dados enquanto a API estiver ligada
         private static readonly ConcurrentBag<Agendamento> _agendamentos = new();
 
