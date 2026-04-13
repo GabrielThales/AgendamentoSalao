@@ -23,11 +23,11 @@ resource "aws_security_group" "api_sg" {
     cidr_blocks = ["0.0.0.0/0"] # Aberto para a internet (para o trabalho)
   }
  
-  ingress {
+ingress {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"] # Acesso SSH para o Ansible
+    cidr_blocks = ["${var.ssh_ip}/32"] 
   }
 
   egress {

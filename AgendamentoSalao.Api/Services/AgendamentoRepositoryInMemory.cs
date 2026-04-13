@@ -1,14 +1,17 @@
-﻿using System;
+﻿using AgendamentoSalao.Api.Models;
+using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using AgendamentoSalao.Api.Models;
+
 
 namespace AgendamentoSalao.Api.Services
 {
     public class AgendamentoRepositoryInMemory : IAgendamentoRepository
     {
+        [assembly: ExcludeFromCodeCoverage]
         // Uma lista estática funciona como um banco de dados enquanto a API estiver ligada
-        private static readonly List<Agendamento> _agendamentos = new();
+        private static readonly ConcurrentBag<Agendamento> _agendamentos = new();
 
         public bool ExisteAgendamento(int profissionalId, DateTime dataHora)
         {
@@ -22,7 +25,7 @@ namespace AgendamentoSalao.Api.Services
 
         public IEnumerable<Agendamento> ObterTodos()
         {
-            return _agendamentos;
+            return _agendamentos.ToList();
         }
     }
 }

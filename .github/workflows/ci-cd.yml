@@ -97,6 +97,10 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
+      - name: Descobrir o IP do GitHub Runner
+        id: ip
+        run: echo "RUNNER_IP=$(curl -s https://checkip.amazonaws.com)" >> $GITHUB_ENV
+
       - name: Terraform Apply
         working-directory: ./infra
         run: |
@@ -107,7 +111,7 @@ jobs:
         id: get_ip
         working-directory: ./infra
         run: echo "EC2_IP=$(terraform output -raw ip_publico)" >> $GITHUB_ENV
-
+    
       - name: Preparar Chave SSH e Rodar Ansible
         env:
           SSH_KEY: ${{ secrets.AWS_SSH_KEY }}
