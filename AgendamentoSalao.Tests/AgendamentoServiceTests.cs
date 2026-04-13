@@ -48,6 +48,27 @@ namespace AgendamentoSalao.Tests
             var excecao = Assert.Throws<InvalidOperationException>(() => _agendamentoService.Agendar(request));
 
             Assert.That(excecao.Message, Is.EqualTo("Profissional já possui um agendamento neste horário."));
+
+        }
+
+        [Test]
+        public void Deve_Criar_Agendamento_Com_Sucesso_Quando_Horario_Estiver_Disponivel()
+        {
+            // Arrange
+            var dataDesejada = DateTime.Now.AddDays(1); // Data válida
+            var request = new AgendamentoRequest(ClienteId: 1, ProfissionalId: 2, DataHora: dataDesejada);
+
+            // Mock responde "false" (ou seja, a agenda do profissional está livre)
+            _agendamentoRepositoryMock
+                .Setup(repo => repo.ExisteAgendamento(request.ProfissionalId, request.DataHora))
+                .Returns(false);
+
+            // Act
+            _agendamentoService.Agendar(request);
+
+            // Assert
+            // Verificamos se o método "Salvar" do repositório foi chamado exatamente 1 vez
+            _agendamentoRepositoryMock.Verify(repo => repo.Salvar(It.IsAny<Agendamento>()), Times.Once);
         }
     }
 }

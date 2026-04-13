@@ -22,6 +22,9 @@ namespace AgendamentoSalao.Api.Services
             {
                 throw new InvalidOperationException("Profissional já possui um agendamento neste horário.");
             }
+
+            var novoAgendamento = new Agendamento(request.ClienteId, request.ProfissionalId, request.DataHora);
+            _repository.Salvar(novoAgendamento);
         }
     }
 }
