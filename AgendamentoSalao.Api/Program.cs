@@ -20,7 +20,7 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 // Um endpoint simples de Healthcheck para provar que a API subiu
-app.MapGet("/", () => "API do Salão de Beleza está rodando perfeitamente!");
+app.MapGet("/", () => "Nova versão da API do Salão de Beleza está rodando perfeitamente!");
 
 app.MapPost("/agendamentos", (AgendamentoRequest request, AgendamentoService service) =>
 {
@@ -29,7 +29,7 @@ app.MapPost("/agendamentos", (AgendamentoRequest request, AgendamentoService ser
         // Aqui usamos o serviço que você testou com TDD! 
         // Ele vai validar as regras de negócio antes de salvar.
         service.Agendar(request);
-        return Results.Created("/agendamentos", request);
+        return Results.Created("/agendamento", request);
     }
     catch (ArgumentException ex) // Erro de data no passado
     {
@@ -41,11 +41,11 @@ app.MapPost("/agendamentos", (AgendamentoRequest request, AgendamentoService ser
     }
 });
 
-app.MapGet("/agendamentos", (IAgendamentoRepository repo) =>
+/*app.MapGet("/agendamentos", (IAgendamentoRepository repo) =>
 {
     var agendamentos = repo.ObterTodos();
     return Results.Ok(agendamentos);
-});
+});*/
 
 
 app.Run();
