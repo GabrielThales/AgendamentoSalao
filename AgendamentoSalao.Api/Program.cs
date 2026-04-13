@@ -2,7 +2,6 @@ using AgendamentoSalao.Api.Models;
 using AgendamentoSalao.Api.Services;
 using System.Diagnostics.CodeAnalysis;
 
-[assembly: ExcludeFromCodeCoverage]
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -51,4 +50,5 @@ app.MapGet("/agendamentos", (IAgendamentoRepository repo) =>
 
 app.Run();
 
+[ExcludeFromCodeCoverage]
 public partial class Program { }
